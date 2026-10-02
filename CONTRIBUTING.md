@@ -24,11 +24,11 @@ version), not only wording.
 
 ## Setup
 ```bash
-git clone <repo> && cd ti-edgeai-skills
+git clone https://github.com/saeedahmadicp/ti-edgeai-skills.git && cd ti-edgeai-skills
 pip install pyyaml
 tests/run_tests.sh                          # lint + unit tests; must pass before and after your change
 scripts/install.sh                          # optional: link skills into ~/.claude/skills to try them
-scripts/install.sh --agent codex --scope repo   # or into <repo>/.agents/skills for Codex (see README)
+scripts/install.sh --agent codex --scope repo   # or into <your-project>/.agents/skills for Codex (see README)
 ```
 
 ## Anatomy of a skill

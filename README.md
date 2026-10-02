@@ -1,12 +1,14 @@
 # ti-edgeai-skills
 
+[![ci](https://github.com/saeedahmadicp/ti-edgeai-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/saeedahmadicp/ti-edgeai-skills/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Agent skills for the Texas Instruments Edge AI SDK. They cover training, compiling, deploying, running and profiling neural
 networks on TI processors with a C7x DSP and MMA accelerator (TDA4VM, AM68A, AM69A, AM67A, AM62A), using TI's
 [edgeai-tidl-tools](https://github.com/TexasInstruments/edgeai-tidl-tools) on the PC and the Edge AI Linux SDK with
 [edgeai-gst-apps](https://github.com/TexasInstruments/edgeai-gst-apps) on the board.
 
 The skills work with Claude Code and Codex. They are written against the SDK rather than any particular model or board.
-
 
 ## Skills
 
@@ -25,26 +27,36 @@ Each skill is a folder with a `SKILL.md`, plus `references/`, `scripts/`, `asset
 
 ### Claude Code plugin
 
+In Claude Code:
+
 ```
-/plugin marketplace add /path/to/ti-edgeai-skills
-/plugin install ti-edgeai-skills@ti-edgeai-skills-dev
+/plugin marketplace add saeedahmadicp/ti-edgeai-skills
+/plugin install ti-edgeai-skills@ti-edgeai-skills
 ```
 
-Use `<owner>/ti-edgeai-skills` instead of the path once the repository is hosted on GitHub.
+To work from a local clone instead, pass its path to `/plugin marketplace add`.
 
 ### Skills directory (Claude Code or Codex)
+
+```bash
+git clone https://github.com/saeedahmadicp/ti-edgeai-skills.git
+cd ti-edgeai-skills
+scripts/install.sh
+```
 
 `scripts/install.sh` symlinks the skills into the folder the agent reads. It does not delete or overwrite anything.
 
 | Command | Folder |
 |---|---|
 | `scripts/install.sh` | `~/.claude/skills` |
-| `scripts/install.sh --agent claude --scope repo` | `<repo>/.claude/skills` |
+| `scripts/install.sh --agent claude --scope repo` | `<your-project>/.claude/skills` |
 | `scripts/install.sh --agent codex` | `~/.agents/skills` |
-| `scripts/install.sh --agent codex --scope repo` | `<repo>/.agents/skills` |
+| `scripts/install.sh --agent codex --scope repo` | `<your-project>/.agents/skills` |
 
-Add `--dry-run` to preview. A root `plugin.json` (portable plugin layout) and per-skill `agents/openai.yaml` are included for Codex.
-Codex discovery has not been tested; the paths follow OpenAI's documentation.
+With `--scope repo` the folder is the git root of the current directory, so run the script from inside the project that should
+get the skills (for example `/path/to/ti-edgeai-skills/scripts/install.sh --scope repo`). Add `--dry-run` to preview.
+
+A root `plugin.json` (portable plugin layout) and per-skill `agents/openai.yaml` are included for Codex. Codex discovery has not been tested; the paths follow OpenAI's documentation.
 
 ## Usage
 
@@ -77,7 +89,6 @@ SoC-specific values (tools `SOC`, gst-apps `SOC`, quantization support) are coll
 [`platforms.md`](skills/ti-edgeai-dev/references/platforms.md). What has and has not been run is listed in
 [docs/verification-status.md](docs/verification-status.md).
 
-
 ## Documentation
 
 - [docs/architecture.md](docs/architecture.md): how the skills fit together and the design rules
@@ -96,7 +107,8 @@ This runs the lint and the unit tests. No board or GPU is required. Tests that n
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Reports from boards other than the TDA4VM are the most useful contribution.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Reports from boards other than the TDA4VM are the most useful contribution;
+use the [issue templates](https://github.com/saeedahmadicp/ti-edgeai-skills/issues/new/choose).
 
 ## License
 

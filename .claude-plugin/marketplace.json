@@ -1,6 +1,6 @@
 {
-  "name": "ti-edgeai-skills-dev",
-  "description": "Development marketplace for ti-edgeai-skills",
+  "name": "ti-edgeai-skills",
+  "description": "Agent skills for the Texas Instruments Edge AI SDK",
   "owner": {
     "name": "saeedahmadicp"
   },
