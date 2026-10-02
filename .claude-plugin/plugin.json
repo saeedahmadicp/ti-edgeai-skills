@@ -3,8 +3,11 @@
   "description": "Skills for developing, deploying and profiling neural networks on Texas Instruments Edge AI processors (C7x/MMA with TIDL: TDA4VM, AM68A, AM69A, AM67A, AM62A) using edgeai-tidl-tools and edgeai-gst-apps",
   "version": "0.1.0",
   "author": {
-    "name": "saeedahmadicp"
+    "name": "saeedahmadicp",
+    "url": "https://github.com/saeedahmadicp"
   },
+  "homepage": "https://github.com/saeedahmadicp/ti-edgeai-skills",
+  "repository": "https://github.com/saeedahmadicp/ti-edgeai-skills",
   "license": "MIT",
   "keywords": [
     "texas-instruments",
@@ -14,6 +17,8 @@
     "onnx",
     "quantization",
     "gstreamer",
-    "skills"
+    "skills",
+    "embedded",
+    "jacinto"
   ]
 }
