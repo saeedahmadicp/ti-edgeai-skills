@@ -1,0 +1,8 @@
+# Optional Codex metadata. SKILL.md stays the single source of truth for behavior.
+interface:
+  display_name: "TI Edge AI Import Model"
+  short_description: "Compile, verify, package and deploy an ONNX model to a TI Edge AI board."
+  default_prompt: "Use $ti-edgeai-import-model to preflight my ONNX model and take it through compile, accuracy check, packaging and deployment."
+
+policy:
+  allow_implicit_invocation: true

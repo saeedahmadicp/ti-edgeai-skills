@@ -1,0 +1,85 @@
+{
+  "skill_name": "ti-edgeai-train-model",
+  "evals": [
+    {
+      "id": "ti-edgeai-train-model-001",
+      "question": "I converted my segmentation masks to boxes with connected components and my detector gets about 1% mAP. The loss goes down though.",
+      "expected_skill": "ti-edgeai-train-model",
+      "expected_script": null,
+      "ground_truth": "Checks the box-size distribution at the training resolution, finds tiny fragment boxes, proposes a labeling rule (merge fragments, minimum size in original pixels), views overlays, re-splits by group, retrains and evaluates on group-held-out data. Asks whether the task should really be detection rather than segmentation.",
+      "expected_behavior": [
+        "Inspects box size percentiles at the training resolution",
+        "Identifies fragmented labels as the likely cause",
+        "Proposes merging with a minimum box size and shows overlays",
+        "Splits by group instead of random frames",
+        "Confirms the user actually wants detection (does not silently change the task)"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-train-model-002",
+      "question": "We have a 16:9 camera and want a detector at 30 fps on the TDA4VM. Which architecture and input size should we train?",
+      "expected_skill": "ti-edgeai-train-model",
+      "expected_script": null,
+      "ground_truth": "Recommends a TI-lite style model (ReLU, TIDL ops), pretrained TI checkpoint, input aspect matched to 16:9 (e.g. 352x640), same plain-resize policy in training/eval/calibration, cites measured model-only timings, notes pipeline limits.",
+      "expected_behavior": [
+        "Recommends ReLU/TIDL-supported architecture",
+        "Matches input aspect to the camera",
+        "Explains TI's no-padding resize",
+        "Cites that the model time is far below 33 ms for 30 fps",
+        "Mentions keeping test data group-held-out"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-train-model-003",
+      "question": "Set up a 3-class YOLOX fine-tune that I can later deploy to the TDA4VM.",
+      "expected_skill": "ti-edgeai-train-model",
+      "expected_script": null,
+      "ground_truth": "Copies exp_ti_lite_template.py, sets DATA_DIR/NUM_CLASSES/INPUT_H/W, uses TI's ti_lite checkpoint, fixed input size, groups-wise COCO splits, evaluates float at the export size, hands off to ti-edgeai-import-model.",
+      "expected_behavior": [
+        "Uses the TI-lite experiment template",
+        "Loads TI's yolox_tiny_ti_lite checkpoint",
+        "Keeps train size equal to deploy size",
+        "Prepares COCO splits grouped by scene/video/session",
+        "Plans float evaluation with the board's resize policy"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-train-model-004",
+      "category": "negative",
+      "question": "Fine-tune an LLM with LoRA on my chat logs.",
+      "expected_skill": null,
+      "expected_script": null,
+      "ground_truth": "Unrelated to TI edge deployment.",
+      "expected_behavior": [
+        "Does not use the TI training skill"
+      ]
+    },
+    {
+      "id": "ti-edgeai-train-model-005",
+      "category": "prerequisite",
+      "question": "Train a detector for my camera.",
+      "expected_skill": "ti-edgeai-train-model",
+      "expected_script": null,
+      "ground_truth": "Asks for camera aspect/resolution, target FPS, classes, data available and target SoC before choosing an architecture.",
+      "expected_behavior": [
+        "Asks the constraints first",
+        "Does not pick an architecture before knowing the aspect and classes"
+      ]
+    },
+    {
+      "id": "ti-edgeai-train-model-006",
+      "category": "partial",
+      "question": "I only have segmentation masks and want a segmentation model on the TI board, not a detector.",
+      "expected_skill": "ti-edgeai-train-model",
+      "expected_script": null,
+      "ground_truth": "Keeps the segmentation task (does not convert masks to boxes), points to a TIDL-friendly segmentation backbone and the segmentation param.yaml/ArgMax conventions.",
+      "expected_behavior": [
+        "Does not convert masks to boxes",
+        "Keeps the task as segmentation"
+      ]
+    }
+  ]
+}

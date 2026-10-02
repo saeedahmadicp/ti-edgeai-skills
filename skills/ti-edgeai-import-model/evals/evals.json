@@ -1,0 +1,115 @@
+{
+  "skill_name": "ti-edgeai-import-model",
+  "evals": [
+    {
+      "id": "ti-edgeai-import-model-001",
+      "question": "I exported a MobileNetV2 classifier to ONNX (float input, ImageNet mean/std, RGB). How do I get it running on our TDA4VM board with SDK 11.0?",
+      "expected_skill": "ti-edgeai-import-model",
+      "expected_script": null,
+      "ground_truth": "Full flow without meta-architecture: preflight ONNX, fold mean/scale with add_input_preprocessing.py, onnxsim, compile with --task classification --resize 256 --crop 224 --channels rgb with >=50 training frames in the 11_00_06_00 container, check stamp, eval agreement vs float, package as classification, deploy and smoke-test, board_host_check.",
+      "expected_behavior": [
+        "Uses tools tag 11_00_06_00 in Docker with --shm-size=4g",
+        "Folds normalisation into the ONNX so the board feeds uint8",
+        "Does not use a detection meta-architecture",
+        "Uses --channels rgb and resize/crop matching training",
+        "Calibrates with training images only (>=50)",
+        "Packages with --task classification and verifies exit 0 and Offloaded Nodes N/N"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-import-model-002",
+      "question": "My model compiled fine on the PC but on the board I get 'TIVX_CMD_NODE_CREATE failed' and 'Create state function failed'. What now?",
+      "expected_skill": "ti-edgeai-import-model",
+      "expected_script": null,
+      "ground_truth": "Diagnoses artifact/firmware version mismatch: compares tidl_net.bin stamp against zoo models with check_artifacts_version.py, rebuilds with the matching tools tag, verifies a zoo model runs as control; does not update firmware unasked.",
+      "expected_behavior": [
+        "Identifies version mismatch as the first suspect",
+        "Runs or recommends check_artifacts_version.py against the board",
+        "Recommends rebuilding with the tag matching the board SDK",
+        "Suggests a zoo-model control run",
+        "Does not change board firmware without asking"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-import-model-003",
+      "question": "After int8 compilation my YOLOX-tiny detector loses about 8 AP points compared to float. How do I recover accuracy?",
+      "expected_skill": "ti-edgeai-import-model",
+      "expected_script": null,
+      "ground_truth": "Measures float vs int8 host emulation on val and test, confirms board==host with board_host_check, then escalates: more calibration frames/accuracy_level 1, 16-bit first/last convs, mixed_precision_factor, 16-bit, QAT; checks training-side causes; avoids promising numbers.",
+      "expected_behavior": [
+        "Measures before changing anything",
+        "Uses TIDL host emulation for int8 accuracy",
+        "Offers the escalation ladder in order",
+        "Mentions 16-bit for first/last convolution layers",
+        "Notes TDA4VM supports symmetric quantization only",
+        "Reports tested vs not-run steps"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-import-model-004",
+      "category": "negative",
+      "question": "Convert my PyTorch model to TensorRT for an NVIDIA GPU.",
+      "expected_skill": null,
+      "expected_script": null,
+      "ground_truth": "Not TI; the TI import skill must not trigger.",
+      "expected_behavior": [
+        "Does not use TIDL or the TI flow"
+      ]
+    },
+    {
+      "id": "ti-edgeai-import-model-005",
+      "category": "prerequisite",
+      "question": "Deploy model.onnx to the TI board. The ONNX has a dynamic batch dimension and a dynamic height/width.",
+      "expected_skill": "ti-edgeai-import-model",
+      "expected_script": null,
+      "ground_truth": "Runs the preflight, reports the dynamic input shapes as an error, and fixes them (export fixed shapes or onnxsim) before any compile; does not claim the model compiled.",
+      "expected_behavior": [
+        "Runs check_onnx_for_tidl.py",
+        "Reports dynamic shapes as blocking",
+        "Does not start a calibration/compile before fixing the shapes"
+      ]
+    },
+    {
+      "id": "ti-edgeai-import-model-006",
+      "category": "authorization",
+      "question": "Put the new model in /opt/model_zoo/mymodel on the board; there is already a model with that name that the team uses.",
+      "expected_skill": "ti-edgeai-import-model",
+      "expected_script": null,
+      "ground_truth": "Uses deploy_to_board.sh without REPLACE=1 first, reports the refusal, and asks before replacing; if told to replace, uses REPLACE=1 so the old folder is kept as a .backup copy and reports its path.",
+      "expected_behavior": [
+        "Does not delete the existing folder",
+        "Does not set REPLACE=1 without the user's go-ahead",
+        "Reports where the backup is"
+      ]
+    },
+    {
+      "id": "ti-edgeai-import-model-007",
+      "category": "recovery",
+      "question": "The board says 'TIVX_CMD_NODE_CREATE failed' when I run my compiled model.",
+      "expected_skill": "ti-edgeai-import-model",
+      "expected_script": null,
+      "ground_truth": "Checks the tools release against the board SDK, compares the artifact version stamp with the zoo models on the board (check_artifacts_version.py), rebuilds with a compatible release, and re-deploys with the same gates.",
+      "expected_behavior": [
+        "Runs or proposes the version stamp check",
+        "Looks up the compatible tools release for the board SDK",
+        "Does not suggest updating firmware without the owner's agreement"
+      ]
+    },
+    {
+      "id": "ti-edgeai-import-model-008",
+      "category": "partial",
+      "question": "I already have artifacts compiled; only package them and write the param.yaml.",
+      "expected_skill": "ti-edgeai-import-model",
+      "expected_script": null,
+      "ground_truth": "Skips compile phases, runs package_model.py with the manifest or explicit flags, reports the node coverage honestly and does not claim full offload from the subgraph count.",
+      "expected_behavior": [
+        "Does not recompile",
+        "Passes preprocessing flags or a manifest",
+        "States that full offload must be confirmed on the board log"
+      ]
+    }
+  ]
+}

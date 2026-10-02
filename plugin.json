@@ -1,0 +1,6 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ti-edgeai-skills",
+  "version": "0.1.0",
+  "description": "Skills for developing, deploying and profiling neural networks on Texas Instruments Edge AI processors (C7x/MMA with TIDL: TDA4VM, AM68A, AM69A, AM67A, AM62A) using edgeai-tidl-tools and edgeai-gst-apps"
+}

@@ -1,0 +1,8 @@
+# Optional Codex metadata. SKILL.md stays the single source of truth for behavior.
+interface:
+  display_name: "TI Edge AI Generate Config"
+  short_description: "Generate, validate and run edgeai-gst-apps configs for cameras, video and displays."
+  default_prompt: "Use $ti-edgeai-generate-config to write and validate an edgeai-gst-apps config for my model and input."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.onnx
+*.bin
+artifacts/
+*-workspace/
+.venv/
+.DS_Store

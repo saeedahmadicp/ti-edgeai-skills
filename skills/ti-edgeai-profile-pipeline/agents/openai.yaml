@@ -1,0 +1,8 @@
+# Optional Codex metadata. SKILL.md stays the single source of truth for behavior.
+interface:
+  display_name: "TI Edge AI Profile Pipeline"
+  short_description: "Measure model, layer and GStreamer pipeline performance on a TI board."
+  default_prompt: "Use $ti-edgeai-profile-pipeline to measure where time goes for my model and pipeline on the board."
+
+policy:
+  allow_implicit_invocation: true

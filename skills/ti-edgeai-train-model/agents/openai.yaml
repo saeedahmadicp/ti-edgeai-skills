@@ -1,0 +1,8 @@
+# Optional Codex metadata. SKILL.md stays the single source of truth for behavior.
+interface:
+  display_name: "TI Edge AI Train Model"
+  short_description: "Plan training, datasets and evaluation so a model deploys well on TI C7x/MMA."
+  default_prompt: "Use $ti-edgeai-train-model to choose an architecture, input size and dataset split for my TI deployment."
+
+policy:
+  allow_implicit_invocation: true

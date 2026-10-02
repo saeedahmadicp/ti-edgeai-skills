@@ -1,0 +1,8 @@
+# Optional Codex metadata. SKILL.md stays the single source of truth for behavior.
+interface:
+  display_name: "TI Edge AI Development"
+  short_description: "Platform reference for TI C7x/MMA boards: SDK versions, SoC values, rules, troubleshooting."
+  default_prompt: "Use $ti-edgeai-dev to identify my TI board's SoC and SDK version and tell me which tools, settings and rules apply."
+
+policy:
+  allow_implicit_invocation: true

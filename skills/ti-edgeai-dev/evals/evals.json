@@ -1,0 +1,98 @@
+{
+  "skill_name": "ti-edgeai-dev",
+  "evals": [
+    {
+      "id": "ti-edgeai-dev-001",
+      "question": "What compile tools / SDK version do I need for my SK-TDA4VM? I only know it boots Arago Linux.",
+      "expected_skill": "ti-edgeai-dev",
+      "expected_script": null,
+      "ground_truth": "Reads EDGEAI_VERSION/SDK_VERSION on the board, maps to the edgeai-tidl-tools tag via the compatibility table (11.0 -> 11_00_06_00), warns that 11_00_08_00/master mismatch an unpatched board, mentions check_artifacts_version.py.",
+      "expected_behavior": [
+        "Asks for or runs an SSH command to read the SDK version instead of guessing",
+        "Names tag 11_00_06_00 for an SDK 11.0 board",
+        "Warns against mixing tool tags with the board firmware",
+        "Does not suggest updating firmware without owner agreement"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-dev-002",
+      "question": "My detector's boxes look stretched and offset when I run it with app_edgeai.py on the TDA4VM, but the ONNX looks fine on my PC.",
+      "expected_skill": "ti-edgeai-dev",
+      "expected_script": null,
+      "ground_truth": "Checks SOC=j721e (ARM-only pipeline otherwise), training/deployment resize policy (TI path squashes without padding), param.yaml resize_with_pad and [H,W] order, channel order.",
+      "expected_behavior": [
+        "Checks whether SOC=j721e was exported",
+        "Explains TI's gst path resizes without padding and the aspect mismatch",
+        "Mentions resize_with_pad false and [H, W] ordering",
+        "Suggests viewing an output frame to confirm the fix"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-dev-003",
+      "question": "Explain how a camera frame becomes detections in the TI edgeai-gst-apps pipeline on TDA4VM.",
+      "expected_skill": "ti-edgeai-dev",
+      "expected_script": null,
+      "ground_truth": "Describes tiovxdlcolorconvert, tiovxmultiscaler split into display and inference branches, tiovxdlpreproc, appsink tensor to ONNX Runtime + TIDL on C7x in the Python app, overlay and sink; notes inference is outside GStreamer.",
+      "expected_behavior": [
+        "Names tiovxmultiscaler and tiovxdlpreproc",
+        "States inference runs through ONNX Runtime with the TIDL execution provider on the C7x",
+        "Notes the Python app does inference between appsink and appsrc",
+        "Mentions SOC=j721e selects the accelerated elements"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-dev-extra-001",
+      "question": "I have an AM69A board, not a TDA4VM. Which tools SOC, gst-apps SOC and quantization settings do I use to deploy my detector?",
+      "expected_skill": "ti-edgeai-dev",
+      "expected_script": null,
+      "ground_truth": "Uses references/platforms.md: tools SOC am69a, gst-apps key j784s4, --target-device AM69A, asymmetric quantization available; states the AM69A row is from TI documentation and was not run on hardware; reads the board SDK to pick the tools tag.",
+      "expected_behavior": [
+        "Reads platforms.md instead of reusing TDA4VM values",
+        "Gives am69a / j784s4",
+        "Says AM69A has not been verified on hardware in this skill set",
+        "Asks for or reads the board SDK version before choosing the tools tag"
+      ],
+      "category": "positive"
+    },
+    {
+      "id": "ti-edgeai-dev-005",
+      "category": "negative",
+      "question": "How do I add a tracker to my DeepStream pipeline on a Jetson Orin?",
+      "expected_skill": null,
+      "expected_script": null,
+      "ground_truth": "Not a TI question; the TI skills must not be used. Answer with DeepStream/Jetson guidance or say it is out of scope.",
+      "expected_behavior": [
+        "Does not load or cite ti-edgeai-* skills",
+        "Does not mention TIDL, C7x or tiovx plugins"
+      ]
+    },
+    {
+      "id": "ti-edgeai-dev-006",
+      "category": "negative",
+      "question": "Explain how int8 post-training quantization works in general.",
+      "expected_skill": null,
+      "expected_script": null,
+      "ground_truth": "A general question; may answer from general knowledge without TI-specific commands.",
+      "expected_behavior": [
+        "Does not invent TI-specific procedures",
+        "Does not run board commands"
+      ]
+    },
+    {
+      "id": "ti-edgeai-dev-007",
+      "category": "prerequisite",
+      "question": "Compile my model for the TI board.",
+      "expected_skill": "ti-edgeai-dev",
+      "expected_script": null,
+      "ground_truth": "Asks which SoC and which SDK version the board runs (and for the ONNX file) instead of assuming TDA4VM and the default tools tag.",
+      "expected_behavior": [
+        "Asks for or reads the board SDK version",
+        "Asks which SoC",
+        "Does not start a compile with assumed defaults"
+      ]
+    }
+  ]
+}

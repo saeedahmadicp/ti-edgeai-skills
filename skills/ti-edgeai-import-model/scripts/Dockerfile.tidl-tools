@@ -1,0 +1,26 @@
+# TI edgeai-tidl-tools host environment for compiling models for a TI Edge AI SoC.
+# Tools tag MUST match the board SDK (docs/version_compatibility_table.md in edgeai-tidl-tools).
+# Build:  docker build -f Dockerfile.tidl-tools --build-arg TIDL_TAG=<tag> --build-arg SOC=<am68pa|am68a|am69a|am62a|am67a> \
+#              -t ti-tidl-tools:<tag>-<soc> .
+# Verified: SOC=am68pa (TDA4VM), TIDL_TAG=11_00_06_00 on a board running Edge AI SDK 11.0 (tag 11_00_08_00 output was rejected).
+# Other SOC values follow TI's setup.sh and have not been built or run here.
+FROM ubuntu:22.04
+# pipefail: a failing build step must fail the image build even when its output is piped through tail
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ARG TIDL_TAG=11_00_06_00
+ARG SOC=am68pa
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends python3.10 python3-pip python3.10-venv git wget \
+    ca-certificates cmake build-essential libyaml-cpp-dev libglib2.0-dev libgl1 libglib2.0-0 protobuf-compiler \
+    libprotobuf-dev unzip zip graphviz libgraphviz-dev && rm -rf /var/lib/apt/lists/*
+WORKDIR /opt
+RUN git clone --depth 1 --branch ${TIDL_TAG} https://github.com/TexasInstruments/edgeai-tidl-tools.git
+WORKDIR /opt/edgeai-tidl-tools
+# Drop heavy training-only requirements; the compile flow does not need them.
+RUN sed -i '/^torch$/d;/^timm$/d;/^gluoncv$/d;/^tflite$/d;/edgeai-caffe2onnx/d;/^pytest$/d' requirements_pc.txt
+# setup.sh needs SOC at build time, otherwise it silently skips downloading tidl_tools (found the hard way).
+ENV SOC=${SOC}
+RUN ./setup.sh --skip_cpp_deps --skip_arm_gcc_download --skip_model_optimizer 2>&1 | tail -15
+# fail the build now (not at compile time) if setup did not produce the tools for this SOC
+RUN test -d "/opt/edgeai-tidl-tools/tools/$(echo ${SOC} | tr a-z A-Z)/tidl_tools"
+RUN pip3 install -q pycocotools onnxsim==0.4.35
