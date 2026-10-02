@@ -7,18 +7,6 @@ networks on TI processors with a C7x DSP and MMA accelerator (TDA4VM, AM68A, AM6
 
 The skills work with Claude Code and Codex. They are written against the SDK rather than any particular model or board.
 
-## Contents
-
-- [Skills](#skills)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Requirements](#requirements)
-- [Supported hardware](#supported-hardware)
-- [Repository layout](#repository-layout)
-- [Documentation](#documentation)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Skills
 
